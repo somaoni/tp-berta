@@ -215,14 +215,14 @@ def split(dataset: Dataset2, config: DataConfig = None):
     test_ratio = 1 - train_ratio
     stratify = None if dataset.is_regression else dataset.y['train']
     sample_idx = np.arange(len(dataset.y['train']))
-    train_idx, val_idx = train_test_split(sample_idx, test_size=test_ratio, random_state=42, stratify=stratify)
+    train_idx, val_idx = train_test_split(sample_idx, test_size=test_ratio, random_state=2025, stratify=stratify)
     
     if config and config.pre_train or 'test' in dataset.y:
         test_idx = None # no need for test split
     else:
         test_idx = val_idx
         stratify = None if dataset.is_regression else dataset.y['train'][train_idx]
-        train_idx, val_idx = train_test_split(train_idx, test_size=test_ratio, random_state=42, stratify=stratify)
+        train_idx, val_idx = train_test_split(train_idx, test_size=test_ratio, random_state=2025, stratify=stratify)
 
     for piece in data_pieces:
         data = getattr(dataset, piece)
