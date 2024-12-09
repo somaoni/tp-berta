@@ -194,7 +194,7 @@ class Dataset2:
             X_cat = {'train': df.iloc[:, X_cat_idx].values.astype(np.object_)}
         if len(X_str_idx) > 0: # for LM baselines (e.g., TP-BERTa), all categorical features are treated as strings
             feature_names['str'] = feat_names[X_str_idx].tolist()
-            X_str = {'train': df.iloc[:, X_str_idx].values.astype(np.str).astype(np.object_)}
+            X_str = {'train': df.iloc[:, X_str_idx].values.astype(str).astype(np.object_)}
         
 
         def remove_data(rm_mask):

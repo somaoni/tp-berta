@@ -4,7 +4,7 @@ import shutil
 import typing as ty
 from pathlib import Path
 
-PROJ = Path('./data').absolute().resolve()
+PROJ = Path('/app/datasets/TP-BERTa/').absolute().resolve()
 CHECKPOINT = Path('./checkpoints').absolute().resolve()
 
 DATA = PROJ / 'none' # dummy path
