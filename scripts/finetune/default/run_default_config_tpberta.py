@@ -102,6 +102,11 @@ data_config = DataConfig.from_pretrained(
     preproc_type='lm', pre_train=False)
 (data_loader, _), dataset = load_single_dataset(args.dataset, data_config, args.task)
 
+size = {k: len(y) for k, y in dataset.y.items()}
+total = sum(size.values())
+print(f"Percent: {size['train'] / total:.2f} | {size['val'] / total:.2f} | {size['test'] / total:.2f}")
+print(f"Size: {size['train']} | {size['val']} | {size['test']}")
+
 """ Model Preparation """
 device = torch.device('cuda')
 args.pretrain_dir = str(CHECKPOINT_DIR) # pre-trained TPBerta dir
@@ -109,7 +114,7 @@ model_config, model = build_default_model(args, data_config, dataset.n_classes, 
 optimizer = make_tpberta_optimizer(model, lr=args.lr, weight_decay=args.weight_decay)
 
 tot_step = 0
-best_metric = -np.inf
+best_metric = np.inf
 final_test_metric = 0
 no_improvement = 0
 tr_task_losses, tr_reg_losses = [], []
@@ -194,7 +199,7 @@ for epoch in trange(args.max_epochs, desc='Finetuning'):
         preds.append(logits.cpu())
         golds.append(labels.cpu())
         ev_loss.append(loss.cpu().item())
-
+    ev_loss_ave = sum(ev_loss) / len(ev_loss)
     ev_task_losses.append(sum(ev_loss) / len(ev_loss))
     score = calculate_metrics(
         torch.cat(golds).numpy(),
@@ -231,8 +236,8 @@ for epoch in trange(args.max_epochs, desc='Finetuning'):
 
     print()
     print(f'[Eval] {metric_key}: {score} | [Test] {metric_key}: {test_score}')
-    if score > best_metric:
-        best_metric = score
+    if ev_loss_ave < best_metric:
+        best_metric = ev_loss_ave
         final_test_metric = test_score
         no_improvement = 0
         print("best result")

@@ -5,7 +5,7 @@ import typing as ty
 from pathlib import Path
 
 PROJ = Path('/app/datasets/TP-BERTa/').absolute().resolve()
-CHECKPOINT = Path('./checkpoints').absolute().resolve()
+CHECKPOINT = Path('/pretrained_weights/tpberta/').absolute().resolve()
 
 DATA = PROJ / 'none' # dummy path
 PRETRAIN_BIN_DATA = PROJ / 'pretrain-bin'

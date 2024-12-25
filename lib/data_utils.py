@@ -222,7 +222,7 @@ def split(dataset: Dataset2, config: DataConfig = None):
     else:
         test_idx = val_idx
         stratify = None if dataset.is_regression else dataset.y['train'][train_idx]
-        train_idx, val_idx = train_test_split(train_idx, test_size=test_ratio, random_state=42, stratify=stratify)
+        train_idx, val_idx = train_test_split(train_idx, test_size=0.125, random_state=42, stratify=stratify)
 
     for piece in data_pieces:
         data = getattr(dataset, piece)
